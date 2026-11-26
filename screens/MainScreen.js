@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TextInput, Button, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
 
 // Turns the typed text into a number, or returns null if it is empty/invalid/negative.
 function parseInput(text) {
@@ -8,7 +8,7 @@ function parseInput(text) {
   return value;
 }
 
-export default function MainScreen() {
+export default function MainScreen({ navigation }) {
   // State for the three inputs (kept as text) ...
   const [hours, setHours] = useState('');
   const [rate, setRate] = useState('');
@@ -57,6 +57,20 @@ export default function MainScreen() {
 
       <Button title="Calculate" onPress={calculate} />
 
+      {error !== '' && <Text style={styles.error}>{error}</Text>}
+
+      {result && (
+        <View style={styles.results}>
+          <Text style={styles.resultText}>Pay: ${result.pay.toFixed(2)}</Text>
+          <Text style={styles.resultText}>Overtime pay: ${result.overtimePay.toFixed(2)}</Text>
+          <Text style={styles.resultText}>Total pay: ${result.totalPay.toFixed(2)}</Text>
+          <Text style={styles.resultText}>Tax: ${result.tax.toFixed(2)}</Text>
+        </View>
+      )}
+
+      <View style={styles.aboutButton}>
+        <Button title="About" onPress={() => navigation.navigate('About')} />
+      </View>
     </ScrollView>
   );
 }
@@ -64,4 +78,8 @@ export default function MainScreen() {
 const styles = StyleSheet.create({
   container: { padding: 20 },
   input: { borderWidth: 1, borderColor: '#999', borderRadius: 6, padding: 10, marginBottom: 12, fontSize: 16 },
+  error: { color: 'red', marginTop: 12 },
+  results: { marginTop: 20 },
+  resultText: { fontSize: 18, marginBottom: 8 },
+  aboutButton: { marginTop: 30 },
 });
